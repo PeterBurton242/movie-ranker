@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Ranker</title>
+</head>
+<body>
+
+<h1>Movie Ranker</h1>
+
+<h2>Who are you?</h2>
+
+{% for user in users %}
+    <a href="{{ url_for('rate_movie', user_id=user.id) }}">
+        <button>{{ user.name }}</button>
+    </a>
+    <br><br>
+{% endfor %}
+
+</body>
+</html>

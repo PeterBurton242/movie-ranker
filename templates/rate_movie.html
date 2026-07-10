@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rate Movie</title>
+</head>
+<body>
+
+<h1>{{ user.name }}</h1>
+
+<h2>{{ movie.title }}</h2>
+<p>{{ movie.year }}</p>
+
+<form method="POST">
+    <label>Rating:</label>
+
+    <select name="rating">
+        {% for i in range(1,11) %}
+            <option value="{{ i }}">{{ i }}</option>
+        {% endfor %}
+    </select>
+
+    <br><br>
+
+    <label>
+        <input type="checkbox" name="seen" checked>
+        Seen
+    </label>
+
+    <input
+    type="hidden"
+    name="movie_id"
+    value="{{ movie.id }}"
+    >
+
+    <br><br>
+
+    <button type="submit">Save Rating</button>
+</form>
+
+</body>
+</html>
