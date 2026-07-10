@@ -20,21 +20,31 @@ def home():
 
 @app.route("/rate/<int:user_id>", methods=["GET", "POST"])
 def rate_movie(user_id):
+
     user = User.query.get_or_404(user_id)
 
     if request.method == "POST":
 
-        rating = int(request.form["rating"])
-        seen = "seen" in request.form
-
         movie_id = int(request.form["movie_id"])
+        rating_value = int(request.form["rating"])
 
-        new_rating = Rating(
-            user_id=user.id,
-            movie_id=movie_id,
-            rating=rating,
-            seen=seen
-        )
+        if rating_value == -1:
+
+            new_rating = Rating(
+                user_id=user.id,
+                movie_id=movie_id,
+                rating=None,
+                seen=False
+            )
+
+        else:
+
+            new_rating = Rating(
+                user_id=user.id,
+                movie_id=movie_id,
+                rating=rating_value,
+                seen=True
+            )
 
         db.session.add(new_rating)
         db.session.commit()
@@ -45,6 +55,7 @@ def rate_movie(user_id):
                 user_id=user.id
             )
         )
+
 
     movie = (
         Movie.query
@@ -60,15 +71,24 @@ def rate_movie(user_id):
         .first()
     )
 
+
     if movie is None:
         return f"{user.name} has rated every movie!"
+
+
+    total_movies = Movie.query.count()
+
+    completed_movies = Rating.query.filter_by(
+        user_id=user.id
+    ).count()
 
     return render_template(
         "rate_movie.html",
         user=user,
-        movie=movie
+        movie=movie,
+        total_movies=total_movies,
+        completed_movies=completed_movies
     )
-
 
 if __name__ == "__main__":
     app.run(debug=True)

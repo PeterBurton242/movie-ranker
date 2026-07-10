@@ -2,40 +2,90 @@
 <html>
 <head>
     <title>Rate Movie</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
 <h1>{{ user.name }}</h1>
-
+<p>
+    Movie {{ completed_movies + 1 }} of {{ total_movies }}
+</p>
+<p>
+    Progress:
+    {{ completed_movies }}/{{ total_movies }}
+</p>
+<div class="progress-container">
+    <div 
+        class="progress-bar"
+        style="width: {{ (completed_movies / total_movies * 100)|round }}%;">
+    </div>
+</div>
 <h2>{{ movie.title }}</h2>
 <p>{{ movie.year }}</p>
 
+
 <form method="POST">
-    <label>Rating:</label>
-
-    <select name="rating">
-        {% for i in range(1,11) %}
-            <option value="{{ i }}">{{ i }}</option>
-        {% endfor %}
-    </select>
-
-    <br><br>
-
-    <label>
-        <input type="checkbox" name="seen" checked>
-        Seen
-    </label>
 
     <input
-    type="hidden"
-    name="movie_id"
-    value="{{ movie.id }}"
+        type="hidden"
+        name="movie_id"
+        value="{{ movie.id }}"
     >
 
-    <br><br>
 
-    <button type="submit">Save Rating</button>
+    <label>Rating:</label>
+
+    <div 
+        class="stars"
+        onmouseleave="resetRating()">
+
+        {% for i in range(1,11) %}
+            <span
+                class="star"
+                onclick="setRating({{i}})"
+                onmouseenter="hoverRating({{i}})">
+                ☆
+            </span>
+        {% endfor %}
+
+    </div>
+
+
+    <p id="rating-display">
+        Rating: 0/10
+    </p>
+
+
+    <input
+        type="hidden"
+        name="rating"
+        id="rating"
+        value="0"
+    >
+
+    <br>
+
+
+    <button type="submit">
+        Save Rating
+    </button>
+
+    <br>
+
+    <button
+        type="button"
+        onclick="notSeen()">
+        Haven't Seen
+    </button>
+
+
+
+
 </form>
+
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
 
 </body>
 </html>
