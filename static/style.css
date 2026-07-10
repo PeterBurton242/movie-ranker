@@ -15,7 +15,7 @@ button {
 }
 
 .stars {
-    margin: 1px;
+    margin: 10px;
 }
 
 .progress-container {
@@ -27,6 +27,11 @@ button {
     overflow: hidden;
 }
 
+.movie-poster {
+    width: 300px;
+    border-radius: 10px;
+    margin: 20px;
+}
 
 .progress-bar {
     height: 100%;

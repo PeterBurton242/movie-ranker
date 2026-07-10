@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from models import db, User, Movie, Rating
+from tmdb import get_movie_poster
 
 app = Flask(__name__)
 
@@ -82,12 +83,18 @@ def rate_movie(user_id):
         user_id=user.id
     ).count()
 
+    poster_url = get_movie_poster(
+        movie.title,
+        movie.year
+    )
+
     return render_template(
         "rate_movie.html",
         user=user,
         movie=movie,
         total_movies=total_movies,
-        completed_movies=completed_movies
+        completed_movies=completed_movies,
+        poster_url=poster_url
     )
 
 if __name__ == "__main__":
