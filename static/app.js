@@ -57,3 +57,18 @@ function notSeen() {
     });
 
 }
+
+window.onload = function () {
+
+    const ratingInput =
+        document.getElementById("rating");
+
+    if (!ratingInput) return;
+
+    const value =
+        parseInt(ratingInput.value);
+
+    if (value > 0) {
+        setRating(value);
+    }
+};

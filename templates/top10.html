@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Top 10</title>
+</head>
+<body>
+
+<h1>{{ user.name }}'s Top 10</h1>
+
+<form method="POST">
+
+    {% for rank in range(1,11) %}
+
+        <p>#{{ rank }}</p>
+
+        <select
+            name="rank_{{ rank }}"
+            onchange="checkDuplicates()"
+        >
+
+            <option value="">
+                Select a movie
+            </option>
+
+            {% for movie in movies %}
+
+            <option
+                value="{{ movie.id }}"
+                {% if existing.get(rank) == movie.id %}
+                    selected
+                {% endif %}
+            >
+                {{ movie.title }} ({{ movie.year }})
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <br><br>
+
+    {% endfor %}
+
+    <button type="submit">
+        Save Top 10
+    </button>
+
+</form>
+<script>
+
+    function checkDuplicates(){
+    
+        let selections = [];
+    
+        document.querySelectorAll("select")
+        .forEach(select => {
+    
+            if(select.value){
+                selections.push(select.value);
+            }
+    
+        });
+    
+    
+        let duplicates =
+            selections.length !== new Set(selections).size;
+    
+    
+        if(duplicates){
+            alert(
+                "You selected the same movie more than once."
+            );
+        }
+    
+    }
+    
+</script>
+<a href="{{ url_for('home') }}"></a>
+    Back to Users
+</a>
+</body>
+</html>

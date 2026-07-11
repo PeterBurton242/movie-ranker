@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ratings</title>
+    {% for user in users %}
+
+    <p>
+        {{ user.name }}:
+        {{ user.ratings|length }}/{{ movies|length }}
+        rated
+    </p>
+    
+    {% endfor %}
+
+    <style>
+
+        table {
+            border-collapse: collapse;
+        }
+        
+        td, th {
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .rating-cell {
+            color: black;
+        }
+        
+        .rating-10 {
+            background-color: #2ecc71;
+        }
+        
+        .rating-9 {
+            background-color: #58d68d;
+        }
+        
+        .rating-8 {
+            background-color: #82e0aa;
+        }
+        
+        .rating-7 {
+            background-color: #f7dc6f;
+        }
+        
+        .rating-6 {
+            background-color: #f4d03f;
+        }
+        
+        .rating-5 {
+            background-color: #f5b041;
+        }
+        
+        .rating-4 {
+            background-color: #eb984e;
+        }
+        
+        .rating-3 {
+            background-color: #ec7063;
+        }
+        
+        .rating-2 {
+            background-color: #e74c3c;
+        }
+        
+        .rating-1 {
+            background-color: #922b21;
+        }
+        
+        .not-seen {
+            background-color: #d5d8dc;
+        }
+        
+        .not-rated {
+            background-color: #f2f3f4;
+        }
+        
+    </style>
+</head>
+<body>
+
+<h1>Movie Ratings</h1>
+
+<h2>Top 10s</h2>
+{% for user in users %}
+
+<a href="{{ url_for(
+    'top10',
+    user_id=user.id
+) }}">
+    {{ user.name }}'s Top 10
+</a>
+
+<br>
+
+{% endfor %}
+
+<br>
+
+<table border="1">
+
+    <tr>
+        <th>Movie</th>
+        <th>Seen</th>
+        <th>Average</th>
+        
+        {% for user in users %}
+            <th>{{ user.name }}</th>
+        {% endfor %}
+        
+        <th>Delete</th>
+    </tr>
+
+    {% for movie in movies %}
+
+    <tr>
+
+        <td>
+            {{ movie.title }} ({{ movie.year }})
+        </td>
+        
+        <td>
+            {{ movie_stats[movie.id]["count"] }}
+        </td>
+        
+        <td>
+            {% if movie_stats[movie.id]["average"] %}
+                {{ movie_stats[movie.id]["average"] }}/10
+            {% else %}
+                —
+            {% endif %}
+        </td>
+
+        {% for user in users %}
+
+            {% set rating = ratings[movie.id][user.id] %}
+
+            <td
+            class="
+            {% if rating %}
+        
+                {% if rating.seen %}
+                    rating-cell rating-{{ rating.rating }}
+                {% else %}
+                    not-seen
+                {% endif %}
+        
+            {% else %}
+                not-rated
+            {% endif %}
+            "
+        >
+        
+        {% if rating %}
+        
+            <a href="{{ url_for(
+                'edit_rating',
+                user_id=user.id,
+                movie_id=movie.id
+            ) }}">
+        
+                {% if rating.seen %}
+                    {{ rating.rating }}/10
+                {% else %}
+                    Not Seen
+                {% endif %}
+        
+            </a>
+        
+        {% else %}
+        
+            —
+        
+        {% endif %}
+        
+        </td>
+
+        {% endfor %}
+
+        <td>
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'delete_movie',
+                    movie_id=movie.id
+                ) }}"
+                onsubmit="return confirm(
+                    'Delete {{ movie.title }}?'
+                );"
+            >
+        
+                <button type="submit">
+                    Delete
+                </button>
+        
+            </form>
+        
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+</body>
+</html>
